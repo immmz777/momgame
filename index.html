@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>消消乐</title>
+  <meta name="description" content="三消关卡游戏">
+  <meta name="theme-color" content="#378ADD">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="消消乐">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">1
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="g">
+    <h2 class="sr-only">三消关卡游戏，难度无限递增，含历史记录</h2>
+    <div id="topbar">
+      <div class="stat"><div class="stat-label">分数</div><div class="stat-val" id="score">0</div></div>
+      <div class="stat"><div class="stat-label">步数</div><div class="stat-val" id="moves">0</div></div>
+      <div class="stat"><div class="stat-label">目标</div><div class="stat-val" id="target-sm">0</div></div>
+      <div class="stat"><div class="stat-label">最高分</div><div class="stat-val" id="best">0</div></div>
+    </div>
+    <div id="lv-row">
+      <span class="lv-pill" id="lv-text">第 1 关</span>
+      <span id="diff-badge"></span>
+    </div>
+    <div id="prog-track"><div id="prog-fill" style="width:0%"></div></div>
+    <div id="board-wrap"><div id="board"></div></div>
+    <div id="msg"></div>
+    <div id="btns">
+      <button onclick="restartLevel()"><i class="ti ti-refresh" aria-hidden="true"></i> 重玩</button>
+      <button onclick="showHint()"><i class="ti ti-bulb" aria-hidden="true"></i> 提示</button>
+    </div>
+    <div id="history-wrap">
+      <div class="hist-title"><i class="ti ti-chart-bar" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i> 历史记录</div>
+      <div id="hlist"></div>
+    </div>
+  </div>
+  <div id="modal-area"></div>
+  <script src="game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
