@@ -37,7 +37,7 @@ body {
 }
 
 #g {
-  padding: .6rem .4rem;
+  padding: .6rem .4rem 90px;
   max-width: 400px;
   margin: 0 auto;
   font-family: var(--font-sans);
@@ -314,26 +314,22 @@ body {
   line-height: 1.6;
 }
 
-/* iOS 26 pill buttons */
-.modal button,
-#btns button {
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: -.01em;
-  border: none;
-  border-radius: 100px;
-  padding: 11px 20px;
-  cursor: pointer;
-  transition: all .18s ease;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
+/* iOS 26 pill buttons — modal only */
 .modal button {
   display: block;
   width: 100%;
   margin-top: 8px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -.01em;
+  border: none;
+  border-radius: 100px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 /* Primary button — filled */
@@ -360,24 +356,43 @@ body {
   transform: scale(.97);
 }
 
-/* Bottom action buttons */
+/* Bottom action buttons — fixed iOS 26 toolbar */
 #btns {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
   display: flex;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 10px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 6px));
+  background: rgba(245, 245, 247, .82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: .5px solid rgba(60, 60, 67, .12);
+  z-index: 20;
 }
 
 #btns button {
   flex: 1;
-  font-size: 13px;
-  padding: 10px 4px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 0;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: -.01em;
+  transition: all .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  font-family: var(--font-sans);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  box-shadow: var(--shadow-sm);
-  border: .5px solid var(--color-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
 }
 
 #btns button:active {
   background: var(--color-surface-secondary);
-  transform: scale(.97);
+  transform: scale(.96);
 }
