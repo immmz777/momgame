@@ -27,7 +27,10 @@
       <span id="diff-badge"></span>
     </div>
     <div id="prog-track"><div id="prog-fill" style="width:0%"></div></div>
-    <div id="board-wrap"><div id="board"></div></div>
+    <div id="board-wrap">
+      <div id="board"></div>
+      <div id="board-overlay"></div>
+    </div>
     <div id="msg"></div>
     <div id="btns">
       <button onclick="restartLevel()"><i class="ti ti-refresh" aria-hidden="true"></i> 重玩</button>
@@ -38,7 +41,6 @@
       <div id="hlist"></div>
     </div>
   </div>
-  <div id="modal-area"></div>
   <script src="game.js"></script>
   <script>
     if ('serviceWorker' in navigator) {

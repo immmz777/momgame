@@ -1,8 +1,39 @@
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --color-bg: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f0f0f3;
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #86868b;
+  --color-text-tertiary: #aeaeb2;
+  --color-text-success: #34c759;
+  --color-text-danger: #ff3b30;
+  --color-text-info: #0071e3;
+  --color-accent: #0071e3;
+  --color-accent-hover: #0077ed;
+  --color-border: rgba(60, 60, 67, .12);
+  --color-border-secondary: rgba(60, 60, 67, .08);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, .12);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   touch-action: manipulation;
+}
+
+body {
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #g {
@@ -29,8 +60,8 @@
 }
 
 .stat {
-  background: var(--color-background-secondary);
-  border-radius: var(--border-radius-md);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
   padding: 5px 4px;
   text-align: center;
 }
@@ -56,7 +87,7 @@
 }
 
 .lv-pill {
-  background: var(--color-background-info);
+  background: rgba(0, 113, 227, .12);
   color: var(--color-text-info);
   font-size: 12px;
   padding: 3px 12px;
@@ -78,7 +109,7 @@
 
 #prog-track {
   height: 5px;
-  background: var(--color-background-secondary);
+  background: var(--color-surface-secondary);
   border-radius: 4px;
   margin-bottom: 7px;
   overflow: hidden;
@@ -95,9 +126,9 @@
 #board-wrap {
   position: relative;
   overflow: hidden;
-  border-radius: var(--border-radius-lg);
-  background: var(--color-background-secondary);
-  border: .5px solid var(--color-border-tertiary);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-secondary);
+  border: .5px solid var(--color-border-secondary);
 }
 
 #board {
@@ -185,22 +216,10 @@
   min-height: 16px;
 }
 
-#btns {
-  display: flex;
-  gap: 7px;
-  margin-top: 5px;
-}
-
-#btns button {
-  flex: 1;
-  font-size: 12px;
-  padding: 7px 4px;
-}
-
 /* History */
 #history-wrap {
   margin-top: 10px;
-  border-top: .5px solid var(--color-border-tertiary);
+  border-top: .5px solid var(--color-border-secondary);
   padding-top: 8px;
 }
 
@@ -216,8 +235,8 @@
   align-items: center;
   font-size: 11px;
   padding: 4px 8px;
-  background: var(--color-background-secondary);
-  border-radius: var(--border-radius-md);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-md);
   margin-bottom: 3px;
 }
 
@@ -230,49 +249,135 @@
   font-weight: 500;
 }
 
-/* Modal overlay */
-.overlay {
-  min-height: 380px;
-  background: rgba(0, 0, 0, .52);
-  border-radius: var(--border-radius-lg);
-  display: flex;
+/* Board overlay — floats above the game board */
+#board-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
   align-items: center;
   justify-content: center;
-  margin-top: 6px;
+  background: rgba(0, 0, 0, .35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: inherit;
+  z-index: 10;
+  animation: overlayIn .3s ease;
 }
 
+#board-overlay.active {
+  display: flex;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* iOS 26 style modal card */
 .modal {
-  background: var(--color-background-primary);
-  border-radius: var(--border-radius-lg);
-  padding: 1.4rem 1.2rem;
-  width: 268px;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  padding: 1.6rem 1.4rem;
+  width: 270px;
   text-align: center;
-  border: .5px solid var(--color-border-tertiary);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .16), 0 0 0 .5px rgba(0, 0, 0, .06);
+  animation: modalIn .35s cubic-bezier(.32, .72, 0, 1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.88) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal h3 {
-  font-size: 17px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 590;
   color: var(--color-text-primary);
   margin-bottom: 4px;
+  letter-spacing: -.01em;
 }
 
 .modal .big {
-  font-size: 28px;
-  font-weight: 500;
+  font-size: 36px;
+  font-weight: 590;
   color: var(--color-text-primary);
   margin: 8px 0;
+  letter-spacing: -.02em;
 }
 
 .modal p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   line-height: 1.6;
 }
 
+/* iOS 26 pill buttons */
+.modal button,
+#btns button {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -.01em;
+  border: none;
+  border-radius: 100px;
+  padding: 11px 20px;
+  cursor: pointer;
+  transition: all .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
 .modal button {
+  display: block;
   width: 100%;
-  margin-top: 7px;
+  margin-top: 8px;
+}
+
+/* Primary button — filled */
+.modal button:first-of-type {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 113, 227, .32);
+}
+
+.modal button:first-of-type:active {
+  background: #0066d6;
+  transform: scale(.97);
+  box-shadow: 0 1px 6px rgba(0, 113, 227, .24);
+}
+
+/* Secondary button — ghost */
+.modal button:not(:first-of-type) {
+  background: rgba(60, 60, 67, .08);
+  color: var(--color-text-primary);
+}
+
+.modal button:not(:first-of-type):active {
+  background: rgba(60, 60, 67, .14);
+  transform: scale(.97);
+}
+
+/* Bottom action buttons */
+#btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+#btns button {
+  flex: 1;
   font-size: 13px;
+  padding: 10px 4px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
+  border: .5px solid var(--color-border);
+}
+
+#btns button:active {
+  background: var(--color-surface-secondary);
+  transform: scale(.97);
 }

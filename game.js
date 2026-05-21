@@ -21,22 +21,31 @@ function getLevelConfig(lv) {
 }
 
 let board = [], score = 0, movesLeft = 0, sel = null, busy = false;
-let level = 1, cfg = {}, history = [];
+let level = 1, unlockedLevel = 1, cfg = {}, history = [];
 let cellSize = 40;
 
 function loadData() {
   try {
-    const d = JSON.parse(localStorage.getItem('m3v3') || '{}');
-    level = d.level || 1;
+    let d = JSON.parse(localStorage.getItem('m3v4') || '{}');
+    if (!d.unlockedLevel) {
+      const old = JSON.parse(localStorage.getItem('m3v3') || '{}');
+      if (old.level) {
+        d.unlockedLevel = old.level;
+        d.history = old.history || [];
+      }
+    }
+    unlockedLevel = d.unlockedLevel || 1;
+    level = unlockedLevel;
     history = d.history || [];
   } catch (e) {
+    unlockedLevel = 1;
     level = 1;
     history = [];
   }
 }
 
 function saveData() {
-  try { localStorage.setItem('m3v3', JSON.stringify({ level, history })); } catch (e) { }
+  try { localStorage.setItem('m3v4', JSON.stringify({ unlockedLevel, history })); } catch (e) { }
 }
 
 function calcCellSize(cols) {
@@ -55,7 +64,8 @@ function startLevel(lv) {
   document.getElementById('lv-text').textContent = '第 ' + lv + ' 关';
   document.getElementById('diff-badge').textContent = getDiffName(lv);
   document.getElementById('target-sm').textContent = cfg.target >= 10000 ? (cfg.target / 1000).toFixed(0) + 'k' : cfg.target;
-  document.getElementById('modal-area').innerHTML = '';
+  document.getElementById('board-overlay').classList.remove('active');
+  document.getElementById('board-overlay').innerHTML = '';
   do { board = genBoard(); } while (!hasMove());
   renderBoard(true);
   setMsg('消除方块，达到目标分！');
@@ -357,29 +367,43 @@ function renderHistory() {
 function showLevelComplete() {
   recordHistory('pass');
   const n = level + 1;
+  if (n > unlockedLevel) {
+    unlockedLevel = n;
+    saveData();
+  }
   const nc = getLevelConfig(n);
-  document.getElementById('modal-area').innerHTML =
-    `<div class="overlay"><div class="modal">
+  const overlay = document.getElementById('board-overlay');
+  overlay.innerHTML =
+    `<div class="modal">
       <h3>第 ${level} 关通过！</h3>
       <div class="big">${score}分</div>
-      <p>剩余 ${movesLeft} 步 · 下一关：${getDiffName(n)}<br>目标 ${nc.target} 分 · ${nc.cols}×${nc.rows} 棋盘 · ${nc.moves} 步</p>
-      <button onclick="startLevel(${n})"><i class="ti ti-arrow-right" aria-hidden="true"></i> 进入第 ${n} 关</button>
-      <button onclick="startLevel(${level})" style="margin-top:6px">重玩本关</button>
-    </div></div>`;
+      <p>剩余 ${movesLeft} 步 · 下一关：${getDiffName(n)}<br>目标 ${nc.target >= 10000 ? (nc.target / 1000).toFixed(0) + 'k' : nc.target} 分 · ${nc.cols}×${nc.rows} 棋盘 · ${nc.moves} 步</p>
+      <button onclick="hideOverlay();startLevel(${n})">进入第 ${n} 关</button>
+      <button onclick="hideOverlay();startLevel(${level})">重玩本关</button>
+    </div>`;
+  overlay.classList.add('active');
   updateStats();
 }
 
 function showGameOver() {
   recordHistory('fail');
-  document.getElementById('modal-area').innerHTML =
-    `<div class="overlay"><div class="modal">
+  const overlay = document.getElementById('board-overlay');
+  overlay.innerHTML =
+    `<div class="modal">
       <h3>未达目标</h3>
       <div class="big">${score}分</div>
-      <p>目标 ${cfg.target} 分，差 ${cfg.target - score} 分</p>
-      <button onclick="startLevel(${level})"><i class="ti ti-refresh" aria-hidden="true"></i> 重玩第 ${level} 关</button>
-      ${level > 1 ? `<button onclick="startLevel(1)" style="margin-top:6px">从第 1 关开始</button>` : ''}
-    </div></div>`;
+      <p>目标 ${cfg.target >= 10000 ? (cfg.target / 1000).toFixed(0) + 'k' : cfg.target} 分，差 ${cfg.target >= 10000 ? ((cfg.target - score) / 1000).toFixed(1) + 'k' : cfg.target - score} 分</p>
+      <button onclick="hideOverlay();startLevel(${level})">重玩第 ${level} 关</button>
+      ${level > 1 ? `<button onclick="hideOverlay();startLevel(1)">从第 1 关开始</button>` : ''}
+    </div>`;
+  overlay.classList.add('active');
   updateStats();
+}
+
+function hideOverlay() {
+  const overlay = document.getElementById('board-overlay');
+  overlay.classList.remove('active');
+  overlay.innerHTML = '';
 }
 
 function setMsg(t) { document.getElementById('msg').textContent = t; }
