@@ -14,9 +14,8 @@ function getLevelConfig(lv) {
   const dim = Math.min(6 + Math.floor((lv - 1) / 5), 8);
   const cols = dim, rows = dim;
   const colors = Math.min(3 + Math.floor((lv - 1) / 4), 8);
-  const moves = Math.max(Math.round(40 - lv * 0.6), lv > 200 ? 6 : lv > 100 ? 8 : 10);
-  const base = 200;
-  const target = Math.round(base * Math.pow(1.38, lv - 1) / 100) * 100;
+  const moves = Math.max(Math.round(40 - (lv - 1) * 0.45), 15);
+  const target = Math.round((300 + (lv - 1) * 350) / 100) * 100;
   return { cols, rows, moves, colors, target };
 }
 
