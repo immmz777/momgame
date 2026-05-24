@@ -1,5 +1,5 @@
 const EMOJIS = ['🔴', '🟡', '🟢', '🔵', '🟣', '🟠', '⭐', '🌸'];
-const BG = ['#ffe0e0', '#fff9cc', '#d4f5d4', '#d0e8ff', '#ead6ff', '#ffe3cc', '#fffbe0', '#ffe8f4'];
+const BG = ['#ff8a80', '#fff176', '#81c784', '#64b5f6', '#ba68c8', '#ffb74d', '#4dd0e1', '#f06292'];
 const DIFF_NAMES = ['', '入门', '简单', '简单', '普通', '普通', '中等', '中等', '困难', '困难', '很难', '很难', '专家', '专家', '大师'];
 
 function getDiffName(lv) {
@@ -14,8 +14,8 @@ function getLevelConfig(lv) {
   const dim = Math.min(6 + Math.floor((lv - 1) / 5), 8);
   const cols = dim, rows = dim;
   const colors = Math.min(3 + Math.floor((lv - 1) / 4), 8);
-  const moves = Math.min(Math.round(16 + lv * 0.8), 60);
-  const target = Math.round((300 + (lv - 1) * 350) / 100) * 100;
+  const moves = Math.min(Math.round(18 + lv * 1.1), 60);
+  const target = Math.round((300 + (lv - 1) * 200) / 100) * 100;
   return { cols, rows, moves, colors, target };
 }
 
@@ -199,7 +199,8 @@ async function processMatches() {
     const m = getMatches();
     if (m.length === 0) break;
     combo++;
-    const pts = m.length * 10 + (m.length > 3 ? (m.length - 3) * 30 : 0) + (combo > 1 ? combo * 15 : 0);
+    const base = 10 + (cfg.colors - 3) * 5;
+    const pts = m.length * base + (m.length > 3 ? (m.length - 3) * base * 3 : 0) + (combo > 1 ? combo * Math.round(base * 1.5) : 0);
     score += pts;
     if (combo > 1) setMsg('连击 x' + combo + '！+' + pts);
     else if (m.length >= 5) setMsg('超级消除！+' + pts);

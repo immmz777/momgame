@@ -1,4 +1,4 @@
-const CACHE = 'momgame-v2';
+const CACHE = 'momgame-v3';
 const ASSETS = [
   '.',
   'index.html',
