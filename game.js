@@ -23,9 +23,15 @@ let board = [], score = 0, movesLeft = 0, sel = null, busy = false;
 let level = 1, unlockedLevel = 1, cfg = {}, history = [];
 let cellSize = 40;
 
+const GAME_VERSION = 1;
+
 function loadData() {
   try {
     let d = JSON.parse(localStorage.getItem('m3v4') || '{}');
+    if (d.version !== GAME_VERSION) {
+      const oldLevel = d.unlockedLevel;
+      d = { version: GAME_VERSION, unlockedLevel: oldLevel || 1, history: [] };
+    }
     if (!d.unlockedLevel) {
       const old = JSON.parse(localStorage.getItem('m3v3') || '{}');
       if (old.level) {
@@ -44,7 +50,7 @@ function loadData() {
 }
 
 function saveData() {
-  try { localStorage.setItem('m3v4', JSON.stringify({ unlockedLevel, history })); } catch (e) { }
+  try { localStorage.setItem('m3v4', JSON.stringify({ version: GAME_VERSION, unlockedLevel, history })); } catch (e) { }
 }
 
 function calcCellSize(cols) {
